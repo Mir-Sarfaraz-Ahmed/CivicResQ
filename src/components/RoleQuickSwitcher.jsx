@@ -73,7 +73,7 @@ const RoleQuickSwitcher = () => {
     if (profile?.role === roleObj.role) return;
     setSwitchingRole(roleObj.role);
     try {
-      const email = isMock ? roleObj.email : roleObj.liveEmail;
+      const email = roleObj.liveEmail || roleObj.email;
       await login(email, 'password');
       navigate(roleObj.path);
     } catch (err) {

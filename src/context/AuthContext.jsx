@@ -5,67 +5,125 @@ const AuthContext = createContext({});
 
 // Pre-seeded mock users for instant testing in local/mock mode
 const MOCK_USERS = {
-  'citizen@example.com': {
-    id: 'mock-citizen-uuid',
-    email: 'citizen@example.com',
-    role: 'CITIZEN',
-    full_name: 'John Citizen',
-    phone: '+1 (555) 010-0200',
+  // Gmail addresses (Primary Demo)
+  'admin@gmail.com': {
+    id: 'mock-admin-uuid',
+    email: 'admin@gmail.com',
+    role: 'ADMIN',
+    full_name: 'Root Administrator',
+    phone: '+91 98765 43210',
     is_active: true,
     organization_id: null,
     org_name: null,
     org_status: null
   },
-  'ngo@example.com': {
-    id: 'mock-ngo-uuid',
-    email: 'ngo@example.com',
-    role: 'NGO',
-    full_name: 'Sarah NGO Lead',
-    phone: '+1 (555) 020-0300',
+  'ops@gmail.com': {
+    id: 'mock-ops-uuid',
+    email: 'ops@gmail.com',
+    role: 'OPERATIONS',
+    full_name: 'Olivia Operations',
+    phone: '+91 98765 43211',
+    is_active: true,
+    organization_id: null,
+    org_name: null,
+    org_status: null
+  },
+  'ground@gmail.com': {
+    id: 'mock-ground-uuid',
+    email: 'ground@gmail.com',
+    role: 'GROUND_TEAM',
+    full_name: 'Gary Ground Rescuer',
+    phone: '+91 98765 43212',
     is_active: true,
     organization_id: 'mock-org-approved-uuid',
     org_name: 'Global Relief Corp',
     org_status: 'APPROVED'
   },
-  'ngo-pending@example.com': {
+  'ngo@gmail.com': {
+    id: 'mock-ngo-uuid',
+    email: 'ngo@gmail.com',
+    role: 'NGO',
+    full_name: 'Sarah NGO Director',
+    phone: '+91 98765 43213',
+    is_active: true,
+    organization_id: 'mock-org-approved-uuid',
+    org_name: 'Global Relief Corp',
+    org_status: 'APPROVED'
+  },
+  'ngo-pending@gmail.com': {
     id: 'mock-ngo-pending-uuid',
-    email: 'ngo-pending@example.com',
+    email: 'ngo-pending@gmail.com',
     role: 'NGO',
     full_name: 'Mark NGO Pending',
-    phone: '+1 (555) 022-0333',
+    phone: '+91 98765 43214',
     is_active: true,
     organization_id: 'mock-org-pending-uuid',
     org_name: 'Hope Initiative',
     org_status: 'PENDING'
   },
-  'ground@example.com': {
-    id: 'mock-ground-uuid',
-    email: 'ground@example.com',
-    role: 'GROUND_TEAM',
-    full_name: 'Gary Ground',
-    phone: '+1 (555) 030-0400',
+  'citizen@gmail.com': {
+    id: 'mock-citizen-uuid',
+    email: 'citizen@gmail.com',
+    role: 'CITIZEN',
+    full_name: 'John Citizen',
+    phone: '+91 98765 43215',
     is_active: true,
-    organization_id: 'mock-org-approved-uuid',
-    org_name: 'Global Relief Corp',
-    org_status: 'APPROVED'
+    organization_id: null,
+    org_name: null,
+    org_status: null
+  },
+
+  // Fallback Example.com aliases
+  'admin@example.com': {
+    id: 'mock-admin-uuid',
+    email: 'admin@example.com',
+    role: 'ADMIN',
+    full_name: 'Root Administrator',
+    phone: '+91 98765 43210',
+    is_active: true,
+    organization_id: null,
+    org_name: null,
+    org_status: null
   },
   'ops@example.com': {
     id: 'mock-ops-uuid',
     email: 'ops@example.com',
     role: 'OPERATIONS',
     full_name: 'Olivia Operations',
-    phone: '+1 (555) 040-0500',
+    phone: '+91 98765 43211',
     is_active: true,
     organization_id: null,
     org_name: null,
     org_status: null
   },
-  'admin@example.com': {
-    id: 'mock-admin-uuid',
-    email: 'admin@example.com',
-    role: 'ADMIN',
-    full_name: 'Alice Admin',
-    phone: '+1 (555) 050-0600',
+  'ground@example.com': {
+    id: 'mock-ground-uuid',
+    email: 'ground@example.com',
+    role: 'GROUND_TEAM',
+    full_name: 'Gary Ground Rescuer',
+    phone: '+91 98765 43212',
+    is_active: true,
+    organization_id: 'mock-org-approved-uuid',
+    org_name: 'Global Relief Corp',
+    org_status: 'APPROVED'
+  },
+  'ngo@example.com': {
+    id: 'mock-ngo-uuid',
+    email: 'ngo@example.com',
+    role: 'NGO',
+    full_name: 'Sarah NGO Director',
+    phone: '+91 98765 43213',
+    is_active: true,
+    organization_id: 'mock-org-approved-uuid',
+    org_name: 'Global Relief Corp',
+    org_status: 'APPROVED'
+  },
+  'citizen@example.com': {
+    id: 'mock-citizen-uuid',
+    email: 'citizen@example.com',
+    role: 'CITIZEN',
+    full_name: 'John Citizen',
+    phone: '+91 98765 43215',
     is_active: true,
     organization_id: null,
     org_name: null,
@@ -134,8 +192,14 @@ export const AuthProvider = ({ children }) => {
   }, []);
 
   // Fetch profile details from Supabase
-  const fetchProfile = async (uid) => {
+  const fetchProfile = async (uid, overrideEmail) => {
     try {
+      const email = (overrideEmail || user?.email || '').toLowerCase().trim();
+      const isAdminEmail = email === 'admin@gmail.com' || email === 'admin@example.com';
+      const isOpsEmail = email === 'ops@gmail.com' || email === 'ops@example.com';
+      const isGroundEmail = email === 'ground@gmail.com' || email === 'ground@example.com';
+      const isNgoEmail = email === 'ngo@gmail.com' || email === 'ngo@example.com';
+
       // Fetch profile
       const { data: profileData, error: profileError } = await supabase
         .from('profiles')
@@ -145,17 +209,30 @@ export const AuthProvider = ({ children }) => {
 
       if (profileError) {
         console.error('Error fetching profile from DB:', profileError);
-        // Fallback default
-        setProfile({
+        // Fallback default based on known admin/staff email
+        const defaultRole = isAdminEmail ? 'ADMIN' : isOpsEmail ? 'OPERATIONS' : isGroundEmail ? 'GROUND_TEAM' : isNgoEmail ? 'NGO' : 'CITIZEN';
+        const fallbackProfile = {
           id: uid,
-          role: 'CITIZEN',
+          email,
+          role: defaultRole,
+          full_name: defaultRole === 'ADMIN' ? 'Root Administrator' : 'Citizen User',
           is_active: true,
           organization_id: null
-        });
-        return;
+        };
+        setProfile(fallbackProfile);
+        return fallbackProfile;
+      }
+
+      // Enforce admin role if email is admin@gmail.com
+      let resolvedRole = profileData.role;
+      if (isAdminEmail && resolvedRole !== 'ADMIN') {
+        resolvedRole = 'ADMIN';
+        // Auto sync role in profiles table
+        supabase.from('profiles').update({ role: 'ADMIN' }).eq('id', uid).then();
       }
 
       // If user has an organization, fetch its status/name
+      let fullProfile;
       if (profileData && profileData.organization_id) {
         const { data: orgData } = await supabase
           .from('organizations')
@@ -163,18 +240,25 @@ export const AuthProvider = ({ children }) => {
           .eq('id', profileData.organization_id)
           .single();
 
-        setProfile({
+        fullProfile = {
           ...profileData,
+          email,
+          role: resolvedRole,
           org_name: orgData?.name || null,
           org_status: orgData?.status || null
-        });
+        };
       } else {
-        setProfile({
+        fullProfile = {
           ...profileData,
+          email,
+          role: resolvedRole,
           org_name: null,
           org_status: null
-        });
+        };
       }
+
+      setProfile(fullProfile);
+      return fullProfile;
     } catch (err) {
       console.error('Failed to resolve profile details:', err);
     }
@@ -183,16 +267,17 @@ export const AuthProvider = ({ children }) => {
   // Login handler
   const login = async (email, password) => {
     setLoading(true);
+    const userKey = (email || '').toLowerCase().trim();
+
     if (isMock) {
       // Mock login handling
-      return new Promise((resolve, reject) => {
+      return new Promise((resolve) => {
         setTimeout(() => {
-          const userKey = email.toLowerCase().trim();
           const mockProfile = MOCK_USERS[userKey] || {
             id: 'mock-dynamic-uuid-' + Math.random(),
             email: userKey,
-            role: 'CITIZEN',
-            full_name: 'Dynamic Test User',
+            role: userKey.includes('admin') ? 'ADMIN' : userKey.includes('ops') ? 'OPERATIONS' : userKey.includes('ground') ? 'GROUND_TEAM' : userKey.includes('ngo') ? 'NGO' : 'CITIZEN',
+            full_name: userKey.includes('admin') ? 'Root Administrator' : 'Dynamic Test User',
             phone: '',
             is_active: true,
             organization_id: null,
@@ -204,19 +289,21 @@ export const AuthProvider = ({ children }) => {
           setUser({ id: mockProfile.id, email: mockProfile.email });
           setProfile(mockProfile);
           setLoading(false);
-          resolve({ user: { id: mockProfile.id, email: mockProfile.email }, error: null });
-        }, 800);
+          resolve({ user: mockProfile, profile: mockProfile, data: mockProfile, error: null });
+        }, 300);
       });
     }
 
     // Live Supabase Login
     try {
-      const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+      const { data, error } = await supabase.auth.signInWithPassword({ email: userKey, password });
       if (error) throw error;
-      return { data, error: null };
+      
+      const loadedProfile = await fetchProfile(data.user.id, userKey);
+      return { data, user: data.user, profile: loadedProfile, error: null };
     } catch (error) {
       setLoading(false);
-      return { data: null, error };
+      return { data: null, user: null, profile: null, error };
     }
   };
 
