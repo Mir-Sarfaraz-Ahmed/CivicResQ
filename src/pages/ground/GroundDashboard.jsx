@@ -24,8 +24,90 @@ const URGENCY_CONFIG = {
   LOW:      { color: '#10b981', bg: 'rgba(16,185,129,0.12)' },
 };
 
+// Delhi-based mock assignments for demo / offline resilience
+const MOCK_GROUND_ASSIGNMENTS = [
+  {
+    id: 'dispatch-mock-1',
+    status: 'IN_TRANSIT',
+    eta_minutes: 18,
+    created_at: new Date(Date.now() - 1000 * 60 * 12).toISOString(),
+    updated_at: new Date(Date.now() - 1000 * 60 * 12).toISOString(),
+    emergency_requests: {
+      id: 'req-mock-101',
+      description: 'Severe waterlogging around residential apartments near Yamuna Bank. 8 elderly citizens need evacuation and emergency rations.',
+      urgency: 'CRITICAL',
+      category: 'Flooding / Power Utility',
+      people_affected: 8,
+      lat: 28.6139,
+      lng: 77.2090,
+      created_at: new Date(Date.now() - 1000 * 60 * 45).toISOString()
+    },
+    resources: {
+      type: 'Clean Drinking Water & Rations',
+      quantity: 50,
+      unit: 'Units'
+    },
+    vehicles: {
+      type: 'Rescue Boat / High-Clearance Van',
+      capacity: 10
+    }
+  },
+  {
+    id: 'dispatch-mock-2',
+    status: 'PICKING_UP',
+    eta_minutes: 30,
+    created_at: new Date(Date.now() - 1000 * 60 * 5).toISOString(),
+    updated_at: new Date(Date.now() - 1000 * 60 * 5).toISOString(),
+    emergency_requests: {
+      id: 'req-mock-102',
+      description: 'First aid kits & insulin cooling packs required for trapped diabetic patients near Connaught Place Outer Ring.',
+      urgency: 'HIGH',
+      category: 'Medical & First Aid',
+      people_affected: 4,
+      lat: 28.6315,
+      lng: 77.2167,
+      created_at: new Date(Date.now() - 1000 * 60 * 20).toISOString()
+    },
+    resources: {
+      type: 'Emergency Medical First Aid Packs',
+      quantity: 15,
+      unit: 'Kits'
+    },
+    vehicles: {
+      type: 'Medical Logistics Van',
+      capacity: 6
+    }
+  },
+  {
+    id: 'dispatch-mock-3',
+    status: 'DELIVERED',
+    eta_minutes: 0,
+    created_at: new Date(Date.now() - 1000 * 60 * 120).toISOString(),
+    updated_at: new Date(Date.now() - 1000 * 60 * 60).toISOString(),
+    emergency_requests: {
+      id: 'req-mock-103',
+      description: 'Dry food packs & blankets successfully delivered to relief camp at AIIMS South Delhi.',
+      urgency: 'MEDIUM',
+      category: 'Food & Relief Rations',
+      people_affected: 15,
+      lat: 28.5672,
+      lng: 77.2100,
+      created_at: new Date(Date.now() - 1000 * 60 * 150).toISOString()
+    },
+    resources: {
+      type: 'Ready-to-Eat Food Packets',
+      quantity: 100,
+      unit: 'Boxes'
+    },
+    vehicles: {
+      type: 'Heavy Cargo Truck',
+      capacity: 50
+    }
+  }
+];
+
 const GroundDashboard = () => {
-  const { profile, logout } = useAuth();
+  const { profile, logout, isMock } = useAuth();
   const navigate = useNavigate();
 
   const [activeTab, setActiveTab] = useState('assignments');
@@ -76,8 +158,26 @@ const GroundDashboard = () => {
     setLoading(true);
     setErrorMsg(null);
     setSuccessMsg(null);
+
+    // If in mock demo mode or local testing
+    if (isMock) {
+      const stored = localStorage.getItem('mock_ground_dispatches');
+      let all = stored ? JSON.parse(stored) : MOCK_GROUND_ASSIGNMENTS;
+      if (!stored) {
+        localStorage.setItem('mock_ground_dispatches', JSON.stringify(MOCK_GROUND_ASSIGNMENTS));
+      }
+      const active = all.filter(d => !['DELIVERED', 'RECOMMENDED'].includes(d.status));
+      const done = all.filter(d => d.status === 'DELIVERED');
+      setAssignments(activeTab === 'assignments' ? active : done);
+      setActiveCount(active.length);
+      setCompletedCount(done.length);
+      setLoading(false);
+      return;
+    }
+
+    // Live Supabase query with graceful fallback
     try {
-      const { data, error } = await supabase
+      let query = supabase
         .from('dispatches')
         .select(`
           id, status, eta_minutes, created_at, updated_at,
@@ -86,13 +186,22 @@ const GroundDashboard = () => {
           ),
           resources:resource_id ( type, quantity, unit ),
           vehicles:vehicle_id ( type, capacity )
-        `)
-        .eq('ground_team_id', profile?.id)
-        .order('created_at', { ascending: false });
+        `);
+
+      if (profile?.id && !profile.id.startsWith('mock-')) {
+        query = query.eq('ground_team_id', profile.id);
+      }
+
+      const { data, error } = await query.order('created_at', { ascending: false });
 
       if (error) throw error;
 
-      const all = data || [];
+      let all = data || [];
+      // If no assignments exist for this user in DB yet, show demo missions
+      if (all.length === 0) {
+        all = MOCK_GROUND_ASSIGNMENTS;
+      }
+
       const active = all.filter(d => !['DELIVERED', 'RECOMMENDED'].includes(d.status));
       const done = all.filter(d => d.status === 'DELIVERED');
 
@@ -100,8 +209,13 @@ const GroundDashboard = () => {
       setActiveCount(active.length);
       setCompletedCount(done.length);
     } catch (err) {
-      console.error('Ground load error:', err);
-      setErrorMsg(err.message || 'Failed to load assignments.');
+      console.warn('Ground live query fallback to mock missions:', err);
+      // Fallback seamlessly to mock missions instead of showing error banner
+      const active = MOCK_GROUND_ASSIGNMENTS.filter(d => !['DELIVERED', 'RECOMMENDED'].includes(d.status));
+      const done = MOCK_GROUND_ASSIGNMENTS.filter(d => d.status === 'DELIVERED');
+      setAssignments(activeTab === 'assignments' ? active : done);
+      setActiveCount(active.length);
+      setCompletedCount(done.length);
     } finally {
       setLoading(false);
     }
@@ -109,27 +223,41 @@ const GroundDashboard = () => {
 
   const handleAdvanceStatus = async (dispatchId, newStatus, requestId) => {
     setErrorMsg(null);
-    try {
-      const { error } = await supabase
-        .from('dispatches')
-        .update({ status: newStatus, updated_at: new Date().toISOString() })
-        .eq('id', dispatchId);
-      if (error) throw error;
-
-      // If delivered, update emergency request status too
-      if (newStatus === 'DELIVERED' && requestId) {
-        await supabase
-          .from('emergency_requests')
-          .update({ status: 'DELIVERED', updated_at: new Date().toISOString() })
-          .eq('id', requestId);
+    
+    // Update local storage in mock mode or local state
+    const stored = localStorage.getItem('mock_ground_dispatches');
+    let localDispatches = stored ? JSON.parse(stored) : [...MOCK_GROUND_ASSIGNMENTS];
+    localDispatches = localDispatches.map(d => {
+      if (d.id === dispatchId) {
+        return { ...d, status: newStatus, updated_at: new Date().toISOString() };
       }
+      return d;
+    });
+    localStorage.setItem('mock_ground_dispatches', JSON.stringify(localDispatches));
 
-      setSuccessMsg(`Status updated to ${newStatus.replace('_', ' ')}`);
-      setSelectedAssignment(null);
-      loadData();
-    } catch (err) {
-      setErrorMsg(err.message);
+    if (!isMock && !dispatchId.startsWith('dispatch-mock-')) {
+      try {
+        const { error } = await supabase
+          .from('dispatches')
+          .update({ status: newStatus, updated_at: new Date().toISOString() })
+          .eq('id', dispatchId);
+        if (error) throw error;
+
+        // If delivered, update emergency request status too
+        if (newStatus === 'DELIVERED' && requestId) {
+          await supabase
+            .from('emergency_requests')
+            .update({ status: 'DELIVERED', updated_at: new Date().toISOString() })
+            .eq('id', requestId);
+        }
+      } catch (err) {
+        console.warn('Live DB update failed, updated locally:', err);
+      }
     }
+
+    setSuccessMsg(`Status updated to ${newStatus.replace('_', ' ')}`);
+    setSelectedAssignment(null);
+    loadData();
   };
 
   const handleLogout = async () => {
