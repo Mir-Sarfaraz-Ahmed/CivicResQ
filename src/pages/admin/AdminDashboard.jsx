@@ -601,18 +601,6 @@ const AdminDashboard = () => {
         {/* Emergency Broadcast System Banner */}
         <EmergencyBroadcastBanner />
 
-        {isMock && (
-          <div className="info-banner" style={{ background: 'rgba(245, 158, 11, 0.08)', borderColor: 'rgba(245, 158, 11, 0.2)', marginBottom: '2rem' }}>
-            <div className="info-banner-icon" style={{ color: '#f59e0b' }}>
-              <Radio size={18} />
-            </div>
-            <div className="info-banner-content">
-              <div className="info-banner-title">Demo Local Storage Mock Mode</div>
-              <div>Connected to local simulated database. All role updates, NGO approvals, and simulated incidents persist in mock storage.</div>
-            </div>
-          </div>
-        )}
-
         {successMsg && (
           <div className="info-banner" style={{ background: 'rgba(16, 185, 129, 0.1)', borderColor: 'rgba(16, 185, 129, 0.2)', marginBottom: '1.5rem' }}>
             <div className="info-banner-icon" style={{ color: '#10b981' }}>

@@ -205,18 +205,6 @@ const CitizenDashboard = () => {
         {/* Emergency Broadcast System Banner */}
         <EmergencyBroadcastBanner />
 
-        {isMock && (
-          <div className="info-banner" style={{ background: 'rgba(245, 158, 11, 0.08)', borderColor: 'rgba(245, 158, 11, 0.2)', marginBottom: '2rem' }}>
-            <div className="info-banner-icon" style={{ color: '#f59e0b' }}>
-              <Info size={18} />
-            </div>
-            <div className="info-banner-content">
-              <div className="info-banner-title">Demo Environment Mode Active</div>
-              <div>Operating on simulated local storage. Submitting new reports will update this list dynamically.</div>
-            </div>
-          </div>
-        )}
-
         {sosSuccessMsg && (
           <div className="info-banner" style={{ background: 'rgba(239, 68, 68, 0.12)', borderColor: 'rgba(239, 68, 68, 0.3)', marginBottom: '1.5rem' }}>
             <div className="info-banner-icon" style={{ color: '#ef4444' }}>

@@ -185,18 +185,6 @@ const NgoDashboard = () => {
         {/* Emergency Broadcast System Banner */}
         <EmergencyBroadcastBanner />
 
-        {isMock && (
-          <div className="info-banner" style={{ background: 'rgba(245, 158, 11, 0.08)', borderColor: 'rgba(245, 158, 11, 0.2)', marginBottom: '2rem' }}>
-            <div className="info-banner-icon" style={{ color: '#f59e0b' }}>
-              <Radio size={18} />
-            </div>
-            <div className="info-banner-content">
-              <div className="info-banner-title">Demo Local Storage Mock Mode</div>
-              <div>Connected to local simulated assets. Modify resources/vehicles to view metrics updates.</div>
-            </div>
-          </div>
-        )}
-
         <div style={{ marginBottom: '2.5rem' }}>
           <h1 style={{ fontSize: '2.25rem', fontWeight: 800, letterSpacing: '-0.03em' }}>
             NGO Operations Center
