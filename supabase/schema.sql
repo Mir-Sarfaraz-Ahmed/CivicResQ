@@ -581,14 +581,14 @@ BEGIN
     SELECT id INTO demo_user_id FROM public.profiles LIMIT 1;
 
     IF demo_user_id IS NOT NULL THEN
-        -- Insert mock requests
+        -- Insert mock requests (Delhi / NCR region)
         INSERT INTO public.emergency_requests (reported_by, description, lat, lng, people_affected, urgency, category, status)
         VALUES 
-        (demo_user_id, 'Severe flooding in downtown area, people trapped on roofs.', 37.7749, -122.4194, 15, 'CRITICAL', 'Flooding & Water', 'UNDER_REVIEW'),
-        (demo_user_id, 'Building collapse after explosion, multiple injuries.', 37.7833, -122.4167, 8, 'CRITICAL', 'Shelter Collapse', 'UNDER_REVIEW'),
-        (demo_user_id, 'Power outage at local hospital, backup generators failing.', 37.7600, -122.4300, 50, 'HIGH', 'Power / Utility Out', 'UNDER_REVIEW'),
-        (demo_user_id, 'Wildfire approaching residential neighborhood.', 37.7500, -122.4500, 120, 'HIGH', 'Active Fire', 'UNDER_REVIEW'),
-        (demo_user_id, 'Requesting medical supplies for makeshift triage center.', 37.7900, -122.4000, 30, 'MEDIUM', 'Medical Emergency', 'UNDER_REVIEW');
+        (demo_user_id, 'Severe flash flooding near Pragati Maidan, families stranded on first floor.', 28.6189, 77.2410, 15, 'CRITICAL', 'Flooding & Water', 'UNDER_REVIEW'),
+        (demo_user_id, 'Structure damage and collapse after heavy tremor near Connaught Place.', 28.6315, 77.2167, 8, 'CRITICAL', 'Shelter Collapse', 'UNDER_REVIEW'),
+        (demo_user_id, 'Power outage and transformer failure at local trauma ward.', 28.5672, 77.2100, 50, 'HIGH', 'Power / Utility Out', 'UNDER_REVIEW'),
+        (demo_user_id, 'Commercial unit fire spreading near market complex.', 28.6500, 77.2300, 40, 'HIGH', 'Active Fire', 'UNDER_REVIEW'),
+        (demo_user_id, 'Requesting emergency trauma triage kits and potable drinking water.', 28.6100, 77.2000, 30, 'MEDIUM', 'Medical Emergency', 'UNDER_REVIEW');
         
         -- Recalculate priorities
         PERFORM calculate_priority(id) FROM public.emergency_requests WHERE status = 'UNDER_REVIEW';
@@ -597,3 +597,46 @@ BEGIN
     RETURN TRUE;
 END;
 $$;
+
+-- -------------------------------------------------------------
+-- Public Disaster Safety Broadcast System
+-- -------------------------------------------------------------
+CREATE TABLE IF NOT EXISTS public.public_broadcasts (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    title TEXT NOT NULL,
+    message TEXT NOT NULL,
+    severity TEXT NOT NULL DEFAULT 'WARNING', -- 'CRITICAL' | 'WARNING' | 'ADVISORY' | 'INFO'
+    region TEXT DEFAULT 'ALL_REGIONS',
+    is_active BOOLEAN DEFAULT TRUE,
+    created_at TIMESTAMPTZ DEFAULT NOW(),
+    expires_at TIMESTAMPTZ
+);
+
+ALTER TABLE public.public_broadcasts ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "Allow public read of broadcasts" 
+ON public.public_broadcasts FOR SELECT 
+USING (true);
+
+CREATE POLICY "Allow Ops and Admins to manage broadcasts" 
+ON public.public_broadcasts FOR ALL 
+USING (get_my_role() IN ('OPERATIONS', 'ADMIN'));
+
+-- Enable Supabase Realtime for broadcasts
+ALTER PUBLICATION supabase_realtime ADD TABLE public.public_broadcasts;
+
+-- -------------------------------------------------------------
+-- Cloud Storage Setup for Emergency Photo Evidence
+-- -------------------------------------------------------------
+INSERT INTO storage.buckets (id, name, public)
+VALUES ('emergency-evidence', 'emergency-evidence', true)
+ON CONFLICT (id) DO NOTHING;
+
+CREATE POLICY "Authenticated users can upload emergency evidence"
+ON storage.objects FOR INSERT
+WITH CHECK (bucket_id = 'emergency-evidence' AND auth.role() = 'authenticated');
+
+CREATE POLICY "Public read emergency evidence"
+ON storage.objects FOR SELECT
+USING (bucket_id = 'emergency-evidence');
+
