@@ -5,7 +5,7 @@ const AuthContext = createContext({});
 
 // Pre-seeded mock users for instant testing in local/mock mode
 const MOCK_USERS = {
-  // Primary Demo Accounts
+  // Primary CivicResQ Production & Demo Accounts
   'admin@civicresq.com': {
     id: 'mock-admin-uuid',
     email: 'admin@civicresq.com',
@@ -17,9 +17,66 @@ const MOCK_USERS = {
     org_name: null,
     org_status: null
   },
+  'ops@civicresq.com': {
+    id: 'mock-ops-uuid',
+    email: 'ops@civicresq.com',
+    role: 'OPERATIONS',
+    full_name: 'Olivia Operations',
+    phone: '+91 98765 43211',
+    is_active: true,
+    organization_id: null,
+    org_name: null,
+    org_status: null
+  },
+  'ground@civicresq.com': {
+    id: 'mock-ground-uuid',
+    email: 'ground@civicresq.com',
+    role: 'GROUND_TEAM',
+    full_name: 'Gary Ground Rescuer',
+    phone: '+91 98765 43212',
+    is_active: true,
+    organization_id: 'mock-org-approved-uuid',
+    org_name: 'Global Relief Corp',
+    org_status: 'APPROVED'
+  },
+  'ngo@civicresq.com': {
+    id: 'mock-ngo-uuid',
+    email: 'ngo@civicresq.com',
+    role: 'NGO',
+    full_name: 'Sarah NGO Director',
+    phone: '+91 98765 43213',
+    is_active: true,
+    organization_id: 'mock-org-approved-uuid',
+    org_name: 'Global Relief Corp',
+    org_status: 'APPROVED'
+  },
+  'ngo-pending@civicresq.com': {
+    id: 'mock-ngo-pending-uuid',
+    email: 'ngo-pending@civicresq.com',
+    role: 'NGO',
+    full_name: 'Mark NGO Pending',
+    phone: '+91 98765 43214',
+    is_active: true,
+    organization_id: 'mock-org-pending-uuid',
+    org_name: 'Hope Initiative',
+    org_status: 'PENDING'
+  },
+  'citizen@civicresq.com': {
+    id: 'mock-citizen-uuid',
+    email: 'citizen@civicresq.com',
+    role: 'CITIZEN',
+    full_name: 'John Citizen',
+    phone: '+91 98765 43215',
+    is_active: true,
+    organization_id: null,
+    org_name: null,
+    org_status: null
+  },
+
+  // Fallback Aliases (Gmail & Example.com)
   'admin@gmail.com': {
     id: 'mock-admin-uuid',
-    email: 'admin@gmail.com',
+    email: 'admin@civicresq.com',
     role: 'ADMIN',
     full_name: 'Root Administrator',
     phone: '+91 98765 43210',
@@ -30,7 +87,7 @@ const MOCK_USERS = {
   },
   'ops@gmail.com': {
     id: 'mock-ops-uuid',
-    email: 'ops@gmail.com',
+    email: 'ops@civicresq.com',
     role: 'OPERATIONS',
     full_name: 'Olivia Operations',
     phone: '+91 98765 43211',
@@ -41,7 +98,7 @@ const MOCK_USERS = {
   },
   'ground@gmail.com': {
     id: 'mock-ground-uuid',
-    email: 'ground@gmail.com',
+    email: 'ground@civicresq.com',
     role: 'GROUND_TEAM',
     full_name: 'Gary Ground Rescuer',
     phone: '+91 98765 43212',
@@ -52,7 +109,7 @@ const MOCK_USERS = {
   },
   'ngo@gmail.com': {
     id: 'mock-ngo-uuid',
-    email: 'ngo@gmail.com',
+    email: 'ngo@civicresq.com',
     role: 'NGO',
     full_name: 'Sarah NGO Director',
     phone: '+91 98765 43213',
@@ -61,20 +118,9 @@ const MOCK_USERS = {
     org_name: 'Global Relief Corp',
     org_status: 'APPROVED'
   },
-  'ngo-pending@gmail.com': {
-    id: 'mock-ngo-pending-uuid',
-    email: 'ngo-pending@gmail.com',
-    role: 'NGO',
-    full_name: 'Mark NGO Pending',
-    phone: '+91 98765 43214',
-    is_active: true,
-    organization_id: 'mock-org-pending-uuid',
-    org_name: 'Hope Initiative',
-    org_status: 'PENDING'
-  },
   'citizen@gmail.com': {
     id: 'mock-citizen-uuid',
-    email: 'citizen@gmail.com',
+    email: 'citizen@civicresq.com',
     role: 'CITIZEN',
     full_name: 'John Citizen',
     phone: '+91 98765 43215',
@@ -83,8 +129,6 @@ const MOCK_USERS = {
     org_name: null,
     org_status: null
   },
-
-  // Fallback Aliases
   'admin@example.com': {
     id: 'mock-admin-uuid',
     email: 'admin@civicresq.com',
@@ -98,7 +142,7 @@ const MOCK_USERS = {
   },
   'ops@example.com': {
     id: 'mock-ops-uuid',
-    email: 'ops@example.com',
+    email: 'ops@civicresq.com',
     role: 'OPERATIONS',
     full_name: 'Olivia Operations',
     phone: '+91 98765 43211',
@@ -109,7 +153,7 @@ const MOCK_USERS = {
   },
   'ground@example.com': {
     id: 'mock-ground-uuid',
-    email: 'ground@example.com',
+    email: 'ground@civicresq.com',
     role: 'GROUND_TEAM',
     full_name: 'Gary Ground Rescuer',
     phone: '+91 98765 43212',
@@ -120,7 +164,7 @@ const MOCK_USERS = {
   },
   'ngo@example.com': {
     id: 'mock-ngo-uuid',
-    email: 'ngo@example.com',
+    email: 'ngo@civicresq.com',
     role: 'NGO',
     full_name: 'Sarah NGO Director',
     phone: '+91 98765 43213',
@@ -131,7 +175,7 @@ const MOCK_USERS = {
   },
   'citizen@example.com': {
     id: 'mock-citizen-uuid',
-    email: 'citizen@example.com',
+    email: 'citizen@civicresq.com',
     role: 'CITIZEN',
     full_name: 'John Citizen',
     phone: '+91 98765 43215',

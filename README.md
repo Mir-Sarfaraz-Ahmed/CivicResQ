@@ -92,10 +92,10 @@ graph TD
 | Role | Email | Password | Access Path |
 |---|---|---|---|
 | 🛡️ **System Admin** | `admin@civicresq.com` | `password` | `/admin/dashboard` |
-| 📡 **Operations Commander** | `ops@gmail.com` | `password` | `/operations/dashboard` |
-| 🚒 **Ground Rescuer** | `ground@gmail.com` | `password` | `/ground/dashboard` |
-| 🏢 **NGO Lead** | `ngo@gmail.com` | `password` | `/ngo/dashboard` |
-| 👤 **Citizen** | `citizen@gmail.com` | `password` | `/citizen/dashboard` |
+| 📡 **Operations Commander** | `ops@civicresq.com` | `password` | `/operations/dashboard` |
+| 🚒 **Ground Rescuer** | `ground@civicresq.com` | `password` | `/ground/dashboard` |
+| 🏢 **NGO Lead** | `ngo@civicresq.com` | `password` | `/ngo/dashboard` |
+| 👤 **Citizen** | `citizen@civicresq.com` | `password` | `/citizen/dashboard` |
 
 > *Tip: A floating **1-Click Role QuickSwitcher** capsule is docked in the bottom-right corner when logged in to swap roles effortlessly.*
 

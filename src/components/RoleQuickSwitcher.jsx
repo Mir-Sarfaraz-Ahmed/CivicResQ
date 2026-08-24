@@ -10,8 +10,8 @@ const ROLES_LIST = [
   {
     role: 'CITIZEN',
     label: 'Citizen',
-    email: 'citizen@example.com',
-    liveEmail: 'citizen@gmail.com',
+    email: 'citizen@civicresq.com',
+    liveEmail: 'citizen@civicresq.com',
     path: '/citizen/dashboard',
     badgeClass: 'role-badge-citizen',
     icon: <Users size={14} />,
@@ -20,8 +20,8 @@ const ROLES_LIST = [
   {
     role: 'NGO',
     label: 'NGO Partner',
-    email: 'ngo@example.com',
-    liveEmail: 'ngo@gmail.com',
+    email: 'ngo@civicresq.com',
+    liveEmail: 'ngo@civicresq.com',
     path: '/ngo/dashboard',
     badgeClass: 'role-badge-ngo',
     icon: <Briefcase size={14} />,
@@ -30,8 +30,8 @@ const ROLES_LIST = [
   {
     role: 'GROUND_TEAM',
     label: 'Ground Team',
-    email: 'ground@example.com',
-    liveEmail: 'ground@gmail.com',
+    email: 'ground@civicresq.com',
+    liveEmail: 'ground@civicresq.com',
     path: '/ground/dashboard',
     badgeClass: 'role-badge-ground',
     icon: <Truck size={14} />,
@@ -40,8 +40,8 @@ const ROLES_LIST = [
   {
     role: 'OPERATIONS',
     label: 'Operations',
-    email: 'ops@example.com',
-    liveEmail: 'ops@gmail.com',
+    email: 'ops@civicresq.com',
+    liveEmail: 'ops@civicresq.com',
     path: '/operations/dashboard',
     badgeClass: 'role-badge-ops',
     icon: <Radio size={14} />,

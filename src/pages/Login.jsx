@@ -374,7 +374,7 @@ const Login = () => {
                 type="button" 
                 className="btn btn-secondary" 
                 style={{ padding: '0.5rem', fontSize: '0.75rem', color: '#5f7bf4' }}
-                onClick={() => triggerQuickLogin('citizen@example.com')}
+                onClick={() => triggerQuickLogin('citizen@civicresq.com')}
               >
                 Citizen
               </button>
@@ -382,7 +382,7 @@ const Login = () => {
                 type="button" 
                 className="btn btn-secondary" 
                 style={{ padding: '0.5rem', fontSize: '0.75rem', color: '#10b981' }}
-                onClick={() => triggerQuickLogin('ngo@example.com')}
+                onClick={() => triggerQuickLogin('ngo@civicresq.com')}
               >
                 NGO (Approved)
               </button>
@@ -390,7 +390,7 @@ const Login = () => {
                 type="button" 
                 className="btn btn-secondary" 
                 style={{ padding: '0.5rem', fontSize: '0.75rem', color: '#f59e0b' }}
-                onClick={() => triggerQuickLogin('ngo-pending@example.com')}
+                onClick={() => triggerQuickLogin('ngo-pending@civicresq.com')}
               >
                 NGO (Pending)
               </button>
@@ -398,7 +398,7 @@ const Login = () => {
                 type="button" 
                 className="btn btn-secondary" 
                 style={{ padding: '0.5rem', fontSize: '0.75rem', color: '#06b6d4' }}
-                onClick={() => triggerQuickLogin('ground@example.com')}
+                onClick={() => triggerQuickLogin('ground@civicresq.com')}
               >
                 Ground Team
               </button>
@@ -406,7 +406,7 @@ const Login = () => {
                 type="button" 
                 className="btn btn-secondary" 
                 style={{ padding: '0.5rem', fontSize: '0.75rem', color: '#a5f3fc' }}
-                onClick={() => triggerQuickLogin('ops@example.com')}
+                onClick={() => triggerQuickLogin('ops@civicresq.com')}
               >
                 Operations
               </button>
