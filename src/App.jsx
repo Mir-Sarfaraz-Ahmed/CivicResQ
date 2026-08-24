@@ -9,6 +9,7 @@ import RoleRoute from './components/RoleRoute';
 import RoleQuickSwitcher from './components/RoleQuickSwitcher';
 
 // Pages
+import LandingPage from './pages/LandingPage';
 import Login from './pages/Login';
 import Unauthorized from './pages/Unauthorized';
 
@@ -31,8 +32,8 @@ import OperationsDashboard from './pages/operations/OperationsDashboard';
 // Admin Pages
 import AdminDashboard from './pages/admin/AdminDashboard';
 
-// Coordinator to redirect logged-in users to their role-specific dashboard
-const HomeRedirect = () => {
+// Coordinator to redirect logged-in users attempting to visit /login to their role dashboard
+const LoginRedirect = () => {
   const { user, profile, loading } = useAuth();
 
   if (loading) {
@@ -80,7 +81,8 @@ function App() {
         <Router>
           <Routes>
             {/* Public / Entry routes */}
-            <Route path="/" element={<HomeRedirect />} />
+            <Route path="/" element={<LandingPage />} />
+            <Route path="/login" element={<LoginRedirect />} />
             <Route path="/unauthorized" element={<Unauthorized />} />
 
             {/* Citizen Routes */}

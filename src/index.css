@@ -1650,3 +1650,11 @@ select option {
   filter: brightness(1.1);
 }
 
+/* Landing Page Responsive Navigation */
+@media (max-width: 768px) {
+  .landing-nav-links {
+    display: none !important;
+  }
+}
+
+
