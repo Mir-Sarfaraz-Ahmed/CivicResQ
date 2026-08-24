@@ -115,7 +115,7 @@ graph TD
 | 🏢 **NGO Lead** | `ngo@gmail.com` | `password` |
 | 🚒 **Ground Team** | `ground@gmail.com` | `password` |
 | 📡 **Operations** | `ops@gmail.com` | `password` |
-| 🛡️ **System Admin** | `admin@gmail.com` | `password` |
+| 🛡️ **System Admin** | `admin@civicresq.com` | `password` |
 
 *Tip: A floating **1-Click Role QuickSwitcher** capsule is docked in the bottom-right corner when logged in to swap roles effortlessly.*
 

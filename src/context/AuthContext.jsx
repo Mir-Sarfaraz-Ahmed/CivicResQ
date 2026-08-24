@@ -5,7 +5,18 @@ const AuthContext = createContext({});
 
 // Pre-seeded mock users for instant testing in local/mock mode
 const MOCK_USERS = {
-  // Gmail addresses (Primary Demo)
+  // Primary Demo Accounts
+  'admin@civicresq.com': {
+    id: 'mock-admin-uuid',
+    email: 'admin@civicresq.com',
+    role: 'ADMIN',
+    full_name: 'Root Administrator',
+    phone: '+91 98765 43210',
+    is_active: true,
+    organization_id: null,
+    org_name: null,
+    org_status: null
+  },
   'admin@gmail.com': {
     id: 'mock-admin-uuid',
     email: 'admin@gmail.com',
@@ -73,10 +84,10 @@ const MOCK_USERS = {
     org_status: null
   },
 
-  // Fallback Example.com aliases
+  // Fallback Aliases
   'admin@example.com': {
     id: 'mock-admin-uuid',
-    email: 'admin@example.com',
+    email: 'admin@civicresq.com',
     role: 'ADMIN',
     full_name: 'Root Administrator',
     phone: '+91 98765 43210',
@@ -195,7 +206,7 @@ export const AuthProvider = ({ children }) => {
   const fetchProfile = async (uid, overrideEmail) => {
     try {
       const email = (overrideEmail || user?.email || '').toLowerCase().trim();
-      const isAdminEmail = email === 'admin@gmail.com' || email === 'admin@example.com';
+      const isAdminEmail = email === 'admin@civicresq.com' || email === 'admin@gmail.com' || email === 'admin@example.com';
       const isOpsEmail = email === 'ops@gmail.com' || email === 'ops@example.com';
       const isGroundEmail = email === 'ground@gmail.com' || email === 'ground@example.com';
       const isNgoEmail = email === 'ngo@gmail.com' || email === 'ngo@example.com';

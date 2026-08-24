@@ -250,7 +250,7 @@ const LandingPage = () => {
               { role: 'NGO Lead', email: 'ngo@gmail.com', path: '/ngo/dashboard', color: '#10b981', icon: <Boxes size={16} /> },
               { role: 'Rescuer', email: 'ground@gmail.com', path: '/ground/dashboard', color: '#f59e0b', icon: <Truck size={16} /> },
               { role: 'Ops Commander', email: 'ops@gmail.com', path: '/operations/dashboard', color: '#06b6d4', icon: <Radio size={16} /> },
-              { role: 'System Admin', email: 'admin@gmail.com', path: '/admin/dashboard', color: '#ef4444', icon: <Shield size={16} /> }
+              { role: 'System Admin', email: 'admin@civicresq.com', path: '/admin/dashboard', color: '#ef4444', icon: <Shield size={16} /> }
             ].map((p) => (
               <button
                 key={p.role}

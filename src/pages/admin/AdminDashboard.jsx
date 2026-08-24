@@ -10,7 +10,8 @@ import EmergencyBroadcastBanner from '../../components/EmergencyBroadcastBanner'
 import { useAlerts } from '../../context/AlertContext';
 
 // Root admin account — this account can NEVER be modified or suspended by anyone
-const ROOT_ADMIN_EMAIL = 'admin@gmail.com';
+const ROOT_ADMIN_EMAIL = 'admin@civicresq.com';
+const PROTECTED_ADMIN_EMAILS = ['admin@civicresq.com', 'admin@gmail.com', 'admin@example.com'];
 
 const AdminDashboard = () => {
   const { profile, user, logout, isMock } = useAuth();
@@ -709,7 +710,7 @@ const AdminDashboard = () => {
                     </thead>
                     <tbody>
                       {usersList.map((usr) => {
-                        const isRootAdmin = usr.email === ROOT_ADMIN_EMAIL;
+                        const isRootAdmin = PROTECTED_ADMIN_EMAILS.includes(usr.email);
                         const isSelf = usr.id === profile.id;
                         return (
                         <tr key={usr.id}>

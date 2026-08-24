@@ -50,8 +50,8 @@ const ROLES_LIST = [
   {
     role: 'ADMIN',
     label: 'System Admin',
-    email: 'admin@example.com',
-    liveEmail: 'admin@gmail.com',
+    email: 'admin@civicresq.com',
+    liveEmail: 'admin@civicresq.com',
     path: '/admin/dashboard',
     badgeClass: 'role-badge-admin',
     icon: <Shield size={14} />,

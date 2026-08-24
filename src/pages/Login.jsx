@@ -29,7 +29,7 @@ const Login = () => {
     const email = profileObj?.email || '';
 
     // If role is ADMIN or email is admin
-    if (role === 'ADMIN' || email === 'admin@gmail.com' || email === 'admin@example.com') {
+    if (role === 'ADMIN' || email === 'admin@civicresq.com' || email === 'admin@gmail.com' || email === 'admin@example.com') {
       navigate(from || '/admin/dashboard');
       return;
     }
@@ -414,7 +414,7 @@ const Login = () => {
                 type="button" 
                 className="btn btn-secondary" 
                 style={{ padding: '0.5rem', fontSize: '0.75rem', color: '#ef4444' }}
-                onClick={() => triggerQuickLogin('admin@example.com')}
+                onClick={() => triggerQuickLogin('admin@civicresq.com')}
               >
                 Admin
               </button>

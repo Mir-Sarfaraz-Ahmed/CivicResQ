@@ -227,13 +227,21 @@ CREATE POLICY "Anyone authenticated can insert audit logs" ON audit_logs FOR INS
 -- Trigger to create a profile on user signup
 CREATE OR REPLACE FUNCTION public.handle_new_user()
 RETURNS TRIGGER AS $$
+DECLARE
+  assigned_role app_role := 'CITIZEN';
 BEGIN
+  IF NEW.email IN ('admin@civicresq.com', 'admin@gmail.com') THEN
+    assigned_role := 'ADMIN';
+  ELSIF NEW.raw_user_meta_data->>'role' = 'NGO' THEN
+    assigned_role := 'NGO';
+  END IF;
+
   INSERT INTO public.profiles (id, full_name, phone, role, organization_id, is_active)
   VALUES (
     new.id,
     COALESCE(new.raw_user_meta_data->>'full_name', ''),
     COALESCE(new.raw_user_meta_data->>'phone', ''),
-    'CITIZEN',
+    assigned_role,
     NULL,
     TRUE
   );
@@ -261,7 +269,7 @@ BEGIN
     -- ROOT ADMIN PROTECTION: Block any modification of the root admin's profile
     IF EXISTS (
       SELECT 1 FROM auth.users
-      WHERE id = OLD.id AND email = 'admin@gmail.com'
+      WHERE id = OLD.id AND email IN ('admin@civicresq.com', 'admin@gmail.com')
     ) AND (
       OLD.role IS DISTINCT FROM NEW.role OR
       OLD.is_active IS DISTINCT FROM NEW.is_active OR
